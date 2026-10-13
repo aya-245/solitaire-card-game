@@ -14,6 +14,6 @@
 - The user should reveal the hidden cards
 - The user should see a message if they win or lose
 - The user should be able to restart the game
-## Screebshots
+## Screenshots
 ## Future Enhancements
 ## Credits
