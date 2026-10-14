@@ -23,8 +23,8 @@ const ranks = [1, 2, 3, 4, 5, 6 ,7 ,8 ,9, 10, 11, 12, 13]
 // variables
 let stock = []
 let waste = []
-let foundation = [[],[],[],[]]
-let tablau = [[],[],[],[],[],[],[]]
+let foundations = [[],[],[],[]]
+let tableau = [[],[],[],[],[],[],[]]
 let selected = null
 
 // Functions
@@ -45,16 +45,31 @@ function shuffle(deck){
         const card = deck.splice(randomCard,1)[0]
         shuffled.push(card)
     }
+    return shuffled
 }
 
 function newGame(){
     stock = []
     waste = []
-    foundation = [[],[],[],[]]
-    tablau = [[],[],[],[],[],[],[]]
+    foundations = [[],[],[],[]]
+    tableau = [[],[],[],[],[],[],[]]
     selected = null
 
-    shuffle(createDeck())
+    const deck = shuffle(createDeck())
+
+    for(let i = 0; i <7; i++){
+        for(let j = 0; j<i+1; j++){
+            tableau[i].push(deck.pop())
+        }
+        tableau[i][tableau[i].length - 1].faceUp = true;
+    }
+    stock = deck
 }
 
-// Event Listeners
+// Event Listener
+newGame()
+
+// tableau.map(pile > pile.length)   
+// stock.length                      
+// tableau[3][3].faceUp              
+// tableau[3][2].faceUp               
