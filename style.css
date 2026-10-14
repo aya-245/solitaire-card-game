@@ -1,0 +1,38 @@
+#top-row{
+    display: flex;
+    gap: 20px;
+}
+#tableau{
+    display: flex;
+    gap: 20px;
+}
+#waste{
+    margin: 0 auto;
+    width: 80px;
+    height: 100px;
+    position: relative;
+}
+#stock{
+    width: 80px;
+    height: 100px;
+    position: relative;
+
+}
+.foundation{
+    width: 80px;
+    height: 100px;
+    position: relative;
+}
+.pile{
+    width: 80px;
+    height: 450px;
+    position: relative;
+}
+.card{
+    width: 80px;
+    height: 100px;
+    border: solid black 5px;
+    border-radius: 8px;
+    background-color: white;
+    position: absolute;
+}
