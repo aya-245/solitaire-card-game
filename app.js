@@ -101,5 +101,21 @@ function createCardElement(card, pileType, pileIndex, cardIndex){
     return cardElement
 }
 
-// Event Listener
+function renderTableau(){
+    for(let i=0; i < 7; i++){
+        pileElement[i].innerHTML = ""
+        for(let j=0; j < tableau[i].length; j++){
+            const card = tableau[i][j]
+            const cardElement = createCardElement(card, "tableau", i, j)
+            cardElement.style.top = j * 20 + "px"
+            pileElement[i].appendChild(cardElement)
+        }
+    }
+}
+
+function render() {
+  renderTableau()
+}
+// Event Listeners
 newGame()
+render()
