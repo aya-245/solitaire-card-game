@@ -1,12 +1,12 @@
 console.log("JS working")
 // cached constants
-gameElement = document.querySelector("#game")
-newGameButtonElement = document.querySelector("#new-game")
-messageElement = document.querySelector("#message")
-stockElement = document.querySelector("#stock")
-wasteElement = document.querySelector("#waste")
-pileElement = document.querySelectorAll(".pile")
-foundationElement = document.querySelectorAll(".foundation")
+const gameElement = document.querySelector("#game")
+const newGameButtonElement = document.querySelector("#new-game")
+const messageElement = document.querySelector("#message")
+const stockElement = document.querySelector("#stock")
+const wasteElement = document.querySelector("#waste")
+const pileElement = document.querySelectorAll(".pile")
+const foundationElement = document.querySelectorAll(".foundation")
 
 console.log(gameElement)
 console.log(newGameButtonElement)
@@ -19,7 +19,7 @@ console.log(foundationElement)
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
 const ranks = ["A", 2, 3, 4, 5, 6 ,7 ,8 ,9, 10, "J", "Q", "K"]
-const suit = ["hearts", "diamonds", "clubs", "spades"]
+const suits = ["hearts", "diamonds", "clubs", "spades"]
 
 // variables
 let stock = []
@@ -31,9 +31,9 @@ let selected = null
 // Functions
 function createDeck(){
     let deck = []
-    for(const suit of suitSymbols){
+    for(const suit of suits){
         for( let rank = 1; rank <=13; rank++){
-            deck.push({suit: suit, rank: rank, faceUp: false})
+            deck.push({suits: suit, rank: rank, faceUp: false})
         }
     }
     return deck
@@ -68,7 +68,7 @@ function newGame(){
 }
 
 function getColor(card){
-    if(card.suit === "hearts" || card.suit === "diamonds"){
+    if(card.suits === "hearts" || card.suits === "diamonds"){
         return "red"
     }
     else{
@@ -77,19 +77,28 @@ function getColor(card){
 }
 
 function getSymbol(card){
-  const label = ranks[card.rank - 1];
-  return label + suitSymbols[card.suit];
+  const label = ranks[card.rank - 1]
+  return label + suitSymbols[card.suits]
 }
 
 function createCardElement(card, pileType, pileIndex, cardIndex){
     const cardElement = document.createElement("div")
     cardElement.classList.add("card")
-    if(faceUp === true){
+    if(card.faceUp){
+        cardElement.textContent = getSymbol(card)
 
-        
+        if(getColor(card) === "red"){
+            cardElement.classList.add("red")
+        }
     }
+    else{
+        cardElement.classList.add("face-down")
+    }
+    cardElement.dataset.pileType = pileType
+    cardElement.dataset.pileIndex = pileIndex
+    cardElement.dataset.cardIndex = cardIndex
 
-    console.log(cardElement)
+    return cardElement
 }
 
 // Event Listener
