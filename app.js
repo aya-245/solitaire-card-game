@@ -24,7 +24,7 @@ const suits = ["hearts", "diamonds", "clubs", "spades"]
 // variables
 let stock = []
 let waste = []
-let foundations = [[],[],[],[]]
+let foundation = [[],[],[],[]]
 let tableau = [[],[],[],[],[],[],[]]
 let selected = null
 
@@ -52,7 +52,7 @@ function shuffle(deck){
 function newGame(){
     stock = []
     waste = []
-    foundations = [[],[],[],[]]
+    foundation = [[],[],[],[]]
     tableau = [[],[],[],[],[],[],[]]
     selected = null
 
@@ -113,9 +113,42 @@ function renderTableau(){
     }
 }
 
+function renderStock(){
+    stockElement.innerHTML = ""
+    if(stock.length > 0){
+        const card = stock[stock.length - 1]
+        const cardElement = createCardElement(card, "stock", 0, stock.length - 1)
+        stockElement.appendChild(cardElement)
+  }
+}
+
+function renderWaste(){
+    wasteElement.innerHTML = ""
+    if(waste.length > 0){
+        const card = waste[waste.length - 1]
+        const cardElement = createCardElement(card, "waste", 0, waste.length - 1)
+        wasteElement.appendChild(cardElement)
+    }
+
+}
+
+function renderFoundation(){
+    for(let i=0; i < 4; i++){
+        foundationElement[i].innerHTML = ""
+        if(foundation[i].length > 0){
+            const card = foundation[i][foundation[i].length - 1]
+            const cardElement = createCardElement(card, "foundation", i, foundation[i].length - 1)
+            foundationElement[i].appendChild(cardElement)
+        }
+    }
+}
+
 function render() {
   renderTableau()
+  renderStock()
+  renderWaste()
+  renderFoundation()
 }
-// Event Listeners
+// Start the game
 newGame()
 render()

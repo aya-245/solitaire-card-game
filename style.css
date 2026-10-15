@@ -16,6 +16,7 @@
     width: 80px;
     height: 100px;
     position: relative;
+    border: black dashed 2px;
 
 }
 .foundation{
