@@ -149,6 +149,28 @@ function render() {
   renderWaste()
   renderFoundation()
 }
+
+function drawCard(){
+    if(stock.length > 0){
+        const topCard = stock.pop()
+        topCard.faceUp = true
+        waste.push(topCard)
+    }
+    else{
+        waste.reverse()
+        for(const card of waste){
+            card.faceUp = false
+        }
+        stock = waste 
+        waste = []   
+    }
+    render()
+
+}
+
+// Event Listeners
+stockElement.addEventListener("click", drawCard)
+
 // Start the game
 newGame()
 render()
