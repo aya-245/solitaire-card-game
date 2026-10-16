@@ -97,6 +97,10 @@ function createCardElement(card, pileType, pileIndex, cardIndex){
     cardElement.dataset.pileType = pileType
     cardElement.dataset.pileIndex = pileIndex
     cardElement.dataset.cardIndex = cardIndex
+    
+    if(selected !== null && selected.pileType === pileType && selected.pileIndex === pileIndex && selected.cardIndex === cardIndex){
+        cardElement.classList.add("selected")
+    }
 
     return cardElement
 }
@@ -164,12 +168,52 @@ function drawCard(){
         stock = waste 
         waste = []   
     }
+    selected = null
     render()
 
 }
 
+function handleClick(event){
+    let closestCard = event.target.closest(".card")
+    if(closestCard === null){
+        selected = null
+        render()
+        return
+    }
+    const pileType = closestCard.dataset.pileType
+    const pileIndex = Number(closestCard.dataset.pileIndex)
+    const cardIndex = Number(closestCard.dataset.cardIndex)
+
+    if(pileType === "stock"){
+        return
+    }
+    let card
+    if(pileType === "tableau"){
+        card = tableau[pileIndex][cardIndex]
+    }
+    else if(pileType === "waste"){
+        card = waste[cardIndex]
+    }
+    else{
+        card = foundation[pileIndex][cardIndex]
+    }
+
+    if(!card.faceUp){
+        return
+    }
+    // is the selected card the same card that was selected , if so, disselect it
+    if(selected !== null && selected.pileType === pileType && selected.pileIndex === pileIndex && selected.cardIndex === cardIndex){
+        selected = null
+    }
+    else{ // if not, save the newly selected card in an object
+        selected = {pileType: pileType, pileIndex: pileIndex, cardIndex: cardIndex}
+    }
+    render()
+}
+
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
+gameElement.addEventListener("click", handleClick)
 
 // Start the game
 newGame()

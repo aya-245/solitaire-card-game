@@ -45,3 +45,6 @@
 .red{
     color: red;
 }
+.selected {
+  outline: 3px solid gold;
+}
