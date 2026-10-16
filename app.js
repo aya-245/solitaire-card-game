@@ -18,7 +18,7 @@ console.log(foundationElement)
 
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
-const ranks = ["A", 2, 3, 4, 5, 6 ,7 ,8 ,9, 10, "J", "Q", "K"]
+const ranks = [1, 2, 3, 4, 5, 6 ,7 ,8 ,9, 10, 11, 12, 13]
 const suits = ["hearts", "diamonds", "clubs", "spades"]
 
 // variables
@@ -209,6 +209,26 @@ function handleClick(event){
         selected = {pileType: pileType, pileIndex: pileIndex, cardIndex: cardIndex}
     }
     render()
+}
+
+function canMoveToTableau(card, pile){
+    if(pile.length === 0){
+        return card.rank === 13
+    }
+    const topCard = pile[pile.length - 1]
+
+   return getColor(card) !== getColor(topCard) && card.rank === topCard.rank - 1
+        
+}
+
+function canMoveToFoundation(card, pile){
+    if(pile.length === 0){
+        return card.rank === 1
+    }
+    const topCard = pile[pile.length - 1]
+
+    return card.suits === topCard.suits && card.rank === topCard.rank + 1
+
 }
 
 // Event Listeners
