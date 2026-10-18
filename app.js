@@ -18,7 +18,7 @@ console.log(foundationElement)
 
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
-const ranks = [1, 2, 3, 4, 5, 6 ,7 ,8 ,9, 10, 11, 12, 13]
+const ranks = ["A", 2, 3, 4, 5, 6 ,7 ,8 ,9, 10, "J", "Q", "K"]
 const suits = ["hearts", "diamonds", "clubs", "spades"]
 
 // variables
@@ -174,27 +174,57 @@ function drawCard(){
 }
 
 function handleClick(event){
-    let closestCard = event.target.closest(".card")
-    if(closestCard === null){
-        selected = null
-        render()
-        return
+   const cardElement = event.target.closest(".card")
+   const pileDiv = event.target.closest(".pile")
+   const foundationDiv = event.target.closest(".foundation")
+   let pileType = null
+   let pileIndex = null
+   let cardIndex = null
+   
+    if(cardElement !== null){
+        pileType = cardElement.dataset.pileType
+        pileIndex = Number(cardElement.dataset.pileIndex)
+        cardIndex = Number(cardElement.dataset.cardIndex)
     }
-    const pileType = closestCard.dataset.pileType
-    const pileIndex = Number(closestCard.dataset.pileIndex)
-    const cardIndex = Number(closestCard.dataset.cardIndex)
 
     if(pileType === "stock"){
         return
     }
+
+    let destType = null
+    let destIndex = null
+
+    if(pileDiv !== null){
+        destType = "tableau"
+        destIndex = Number(pileDiv.dataset.index)
+    }
+    else if(foundationDiv !== null){
+        destType = "foundation"
+        destIndex = Number(foundationDiv.dataset.index)
+    }
+
+    const sameSpot = selected !== null && destType === selected.pileType && destIndex === selected.pileIndex
+
+    if (selected !== null && destType !== null && !sameSpot) {
+        console.log(destType, destIndex)
+        tryMove(destType, destIndex)
+        return
+    }
+
+        if (cardElement === null) {
+        selected = null
+        render()
+        return
+    }
+
     let card
-    if(pileType === "tableau"){
+    if (pileType === "tableau") {
         card = tableau[pileIndex][cardIndex]
-    }
-    else if(pileType === "waste"){
+    } 
+    else if (pileType === "waste") {
         card = waste[cardIndex]
-    }
-    else{
+    } 
+    else {
         card = foundation[pileIndex][cardIndex]
     }
 
@@ -212,6 +242,7 @@ function handleClick(event){
 }
 
 function canMoveToTableau(card, pile){
+    console.log('pile',pile)
     if(pile.length === 0){
         return card.rank === 13
     }
@@ -229,6 +260,52 @@ function canMoveToFoundation(card, pile){
 
     return card.suits === topCard.suits && card.rank === topCard.rank + 1
 
+}
+function tryMove(destType, destIndex){
+    let source
+    if(selected.pileType === "tableau"){
+        source = tableau[selected.pileIndex]
+    }
+    else if(selected.pileType === "waste"){
+        source = waste
+    }
+    else{
+        source = foundation[selected.pileIndex]
+    }
+
+    const movingCard = source[selected.cardIndex]
+    const cardAmount = source.length - selected.cardIndex
+
+    let legal = false
+    if (destType === "foundation") { // can move only one crad to the founction
+        legal = cardAmount === 1 && canMoveToFoundation(movingCard, foundation[destIndex])
+    } 
+    else { // can move a stack
+        legal = canMoveToTableau(movingCard, tableau[destIndex])
+    }
+
+    if (legal) {
+    const chunk = source.splice(selected.cardIndex)
+
+    let destination // moves to foundation
+    if (destType === "foundation") {
+      destination = foundation[destIndex]
+    } 
+    else { //moves to tableau
+      destination = tableau[destIndex]
+    }
+    // pushed the card to destination
+   for (const card of chunk) {
+        destination.push(card)
+    }
+        // keep the card face up
+    if (selected.pileType === "tableau" && source.length > 0) {
+      source[source.length - 1].faceUp = true
+    }
+  }
+ 
+  selected = null
+  render()
 }
 
 // Event Listeners
