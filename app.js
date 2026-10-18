@@ -339,7 +339,9 @@ function tryMove(destType, destIndex){
     if(checkWin() === true){
         finishGame()
     }
-
+    else if(canAutoWin() === true){
+        autoWin()
+    }
   }
  
   selected = null
@@ -377,6 +379,29 @@ function finishGame(){
     }
     updateScore(0)
     messageElement.textContent = "You won! Score: " + score
+}
+
+function canAutoWin(){
+    if(stock.length > 0 || waste.length > 0){
+        return false
+    }
+    for(let i=0; i<7; i++){
+        for(const card of tableau[i]){
+            if(card.faceUp === false){
+                return false
+            }
+        }
+    return true
+    }
+}
+
+function autoWin(){
+    let count = 0
+    for(let i=0; i<7; i++){
+        count += tableau[i].length
+    }
+    updateScore(count * 10)
+    finishGame()
 }
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
