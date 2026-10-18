@@ -308,9 +308,16 @@ function tryMove(destType, destIndex){
   render()
 }
 
+ function resetGame(){
+    newGame()
+    messageElement.textContent = ""
+    render()
+}
+
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
+newGameButtonElement.addEventListener("click", resetGame)
 
 // Start the game
 newGame()
