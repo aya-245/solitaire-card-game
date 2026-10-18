@@ -7,6 +7,8 @@ const stockElement = document.querySelector("#stock")
 const wasteElement = document.querySelector("#waste")
 const pileElement = document.querySelectorAll(".pile")
 const foundationElement = document.querySelectorAll(".foundation")
+const scoreElement = document.querySelector("#score")
+const highestScoreElement = document.querySelector("#highest-score")
 
 console.log(gameElement)
 console.log(newGameButtonElement)
@@ -15,6 +17,8 @@ console.log(stockElement)
 console.log(wasteElement)
 console.log(pileElement)
 console.log(foundationElement)
+console.log(scoreElement)
+console.log(highestScoreElement)
 
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
@@ -27,6 +31,8 @@ let waste = []
 let foundation = [[],[],[],[]]
 let tableau = [[],[],[],[],[],[],[]]
 let selected = null
+let score = 0
+let highestScore = 0
 
 // Functions
 function createDeck(){
@@ -55,7 +61,9 @@ function newGame(){
     foundation = [[],[],[],[]]
     tableau = [[],[],[],[],[],[],[]]
     selected = null
+    score = 0
 
+    updateScore(0)
     const deck = shuffle(createDeck())
 
     for(let i = 0; i <7; i++){
@@ -160,7 +168,8 @@ function drawCard(){
         topCard.faceUp = true
         waste.push(topCard)
     }
-    else{
+    else if(waste.length > 0){
+        updateScore(-20)
         waste.reverse()
         for(const card of waste){
             card.faceUp = false
@@ -298,10 +307,39 @@ function tryMove(destType, destIndex){
    for (const card of chunk) {
         destination.push(card)
     }
-        // keep the card face up
-    if (selected.pileType === "tableau" && source.length > 0) {
-      source[source.length - 1].faceUp = true
+
+    // Waste to tableau: +5
+    // Waste to foundation: +10
+    // Tableau to foundation: +10
+    // Flipping a face-down tableau card: +5
+    // Foundation back to tableau: -15
+    // Recycling the waste into the stock: -20
+
+    if(selected.pileType === "waste" && destType === "tableau"){
+        updateScore(5)
     }
+    else if(selected.pileType === "waste" && destType === "foundation"){
+        updateScore(10)
+    }
+    else if(selected.pileType === "tableau" && destType === "foundation"){
+        updateScore(10)
+    }
+    else if(selected.pileType === "foundation" && destType === "tableau"){
+        updateScore(-15)
+    }
+
+    if(selected.pileType === "tableau" && source.length > 0){
+        const newTop = source[source.length - 1]
+        if(newTop.faceUp === false){
+            newTop.faceUp = true
+            updateScore(5)
+        }
+
+    }
+    if(checkWin() === true){
+        finishGame()
+    }
+
   }
  
   selected = null
@@ -314,11 +352,38 @@ function tryMove(destType, destIndex){
     render()
 }
 
+function updateScore(points){
+    score += points
+    if(score < 0){
+        score = 0
+    }
+    scoreElement.textContent = "Score: " + score
+    highestScoreElement.textContent = "Highest Score: " + highestScore
+}
+
+function checkWin(){
+    for(let i=0; i < 4; i++){
+        if(foundation[i].length !== 13){
+            return false
+        }
+    }
+    return true
+}
+
+function finishGame(){
+    if(score > highestScore){
+        highestScore = score
+        localStorage.setItem("highestScore", highestScore)
+    }
+    updateScore(0)
+    messageElement.textContent = "You won! Score: " + score
+}
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
 newGameButtonElement.addEventListener("click", resetGame)
 
 // Start the game
+highestScore = Number(localStorage.getItem("highestScore"))
 newGame()
 render()
