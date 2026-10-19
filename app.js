@@ -9,6 +9,7 @@ const pileElement = document.querySelectorAll(".pile")
 const foundationElement = document.querySelectorAll(".foundation")
 const scoreElement = document.querySelector("#score")
 const highestScoreElement = document.querySelector("#highest-score")
+const undoDrawElement = document.querySelector("#undo-draw")
 
 console.log(gameElement)
 console.log(newGameButtonElement)
@@ -19,6 +20,7 @@ console.log(pileElement)
 console.log(foundationElement)
 console.log(scoreElement)
 console.log(highestScoreElement)
+console.log(undoDrawElement)
 
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
@@ -33,6 +35,7 @@ let tableau = [[],[],[],[],[],[],[]]
 let selected = null
 let score = 0
 let highestScore = 0
+let canUndoDraw = false
 
 // Functions
 function createDeck(){
@@ -62,6 +65,7 @@ function newGame(){
     tableau = [[],[],[],[],[],[],[]]
     selected = null
     score = 0
+    canUndoDraw = false
 
     updateScore(0)
     const deck = shuffle(createDeck())
@@ -160,6 +164,8 @@ function render() {
   renderStock()
   renderWaste()
   renderFoundation()
+  //disbale the undo button when the player can't undo
+  undoDrawElement.disabled = !canUndoDraw
 }
 
 function drawCard(){
@@ -167,8 +173,10 @@ function drawCard(){
         const topCard = stock.pop()
         topCard.faceUp = true
         waste.push(topCard)
+        canUndoDraw = true
     }
     else if(waste.length > 0){
+        canUndoDraw = false
         updateScore(-20)
         waste.reverse()
         for(const card of waste){
@@ -294,6 +302,7 @@ function tryMove(destType, destIndex){
     }
 
     if (legal) {
+    canUndoDraw = false
     const chunk = source.splice(selected.cardIndex)
 
     let destination // moves to foundation
@@ -403,10 +412,23 @@ function autoWin(){
     updateScore(count * 10)
     finishGame()
 }
+
+function undoDraw(){
+    if(canUndoDraw === false || waste.length === 0){
+        return
+    }
+    const card = waste.pop() 
+    card.faceUp = false
+    stock.push(card)
+    canUndoDraw = false
+    selected = null
+    render()
+}
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
 newGameButtonElement.addEventListener("click", resetGame)
+undoDrawElement.addEventListener("click", undoDraw)
 
 // Start the game
 highestScore = Number(localStorage.getItem("highestScore"))
