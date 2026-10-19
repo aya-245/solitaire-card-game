@@ -48,3 +48,16 @@
 .selected {
   outline: 3px solid gold;
 }
+#board{
+    position: relative;
+}
+#pause-popu{
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 100%;
+    width: 100%;
+}
+.hidden{
+    display: none;
+}

@@ -10,6 +10,9 @@ const foundationElement = document.querySelectorAll(".foundation")
 const scoreElement = document.querySelector("#score")
 const highestScoreElement = document.querySelector("#highest-score")
 const undoDrawElement = document.querySelector("#undo-draw")
+const pauseButtonelement = document.querySelector("#pause-button")
+const timerElement = document.querySelector("#timer")
+const pausePopUpElement = document.querySelector("#pause-popup")
 
 console.log(gameElement)
 console.log(newGameButtonElement)
@@ -21,6 +24,9 @@ console.log(foundationElement)
 console.log(scoreElement)
 console.log(highestScoreElement)
 console.log(undoDrawElement)
+console.log(pauseButtonelement)
+console.log(timerElement)
+console.log(pausePopUpElement)
 
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
@@ -36,6 +42,9 @@ let selected = null
 let score = 0
 let highestScore = 0
 let canUndoDraw = false
+let seconds = 0
+let timerId = null
+let paused = false
 
 // Functions
 function createDeck(){
@@ -170,12 +179,14 @@ function render() {
 
 function drawCard(){
     if(stock.length > 0){
+        startTimer()
         const topCard = stock.pop()
         topCard.faceUp = true
         waste.push(topCard)
         canUndoDraw = true
     }
     else if(waste.length > 0){
+        startTimer()
         canUndoDraw = false
         updateScore(-20)
         waste.reverse()
@@ -302,15 +313,16 @@ function tryMove(destType, destIndex){
     }
 
     if (legal) {
-    canUndoDraw = false
-    const chunk = source.splice(selected.cardIndex)
+        startTimer()
+        canUndoDraw = false
+        const chunk = source.splice(selected.cardIndex)
 
-    let destination // moves to foundation
+        let destination // moves to foundation
     if (destType === "foundation") {
-      destination = foundation[destIndex]
+        destination = foundation[destIndex]
     } 
     else { //moves to tableau
-      destination = tableau[destIndex]
+        destination = tableau[destIndex]
     }
     // pushed the card to destination
    for (const card of chunk) {
@@ -423,6 +435,29 @@ function undoDraw(){
     canUndoDraw = false
     selected = null
     render()
+}
+
+function formatTime(totalSeconds){ // makes the number look nice by adding padStart
+    const minutes = Math.floor(totalSeconds/60)
+    const sec = totalSeconds % 60
+    // adds a 0 in the beginning of the number: example(02:01)
+    return String(minutes).padStart(2, "0") + ":" + String(sec).padStart(2, "0")
+}
+
+function tick(){ // adds a second and updates the display
+    seconds += 1
+    timerElement.textContent = "Time: " + formatTime(seconds) 
+}
+
+function startTimer(){
+    if(timerId !== null){
+        return
+    }
+    timerId = setInterval(tick, 1000)
+}
+function stopTimer(){
+        clearInterval(timerId)
+        timerId = null
 }
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
