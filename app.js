@@ -439,8 +439,8 @@ function canAutoWin(){
                 return false
             }
         }
-    return true
     }
+    return true
 }
 
 function autoWin(){

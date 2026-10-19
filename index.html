@@ -9,25 +9,29 @@
 </head>
 <body>
 
-  <h1>Solitaire</h1>
+<nav id="navbar">
+  <h1>Marvel Solitaire</h1>
 
-  <div id="game">
+  <div id="stats">
+    <p id="score"></p>
+    <p id="highest-score"></p>
+    <p id="timer">Time: 00:00</p>
+  </div>
 
-    <div id="controls">
-      <button id="new-game">New Game</button>
-      <button id="undo-draw">Undo</button>
-      <button id="pause-button">Pause</button>
-      <p id="message"></p>
-      <p id="score"></p>
-      <p id="highest-score"></p>
-      <p id="timer">Time: 00:00</p>
-    </div>
+  <div id="buttons">
+    <button id="new-game">New Game</button>
+    <button id="undo-draw">Undo</button>
+    <button id="pause-button">Pause</button>
+  </div>
+</nav>
 
-<div id="board">
+<p id="message"></p>
+
+<div id="game">
+  <div id="board">
     <div id="top-row">
       <div id="stock"></div>
       <div id="waste"></div>
-      <div id="pause-popup" class="hidden">Paused</div>
 
       <div class="foundation" data-index="0"></div>
       <div class="foundation" data-index="1"></div>
@@ -44,8 +48,10 @@
       <div class="pile" data-index="5"></div>
       <div class="pile" data-index="6"></div>
     </div>
+
+    <div id="pause-popup" class="hidden">Paused</div>
+  </div>
 </div>
 
-  </div>
 </body>
 </html>

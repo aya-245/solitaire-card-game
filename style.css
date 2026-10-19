@@ -1,36 +1,52 @@
+body{
+    background-color: #DDD8B4;
+}
+
 #top-row{
-    display: flex;
-    gap: 20px;
+    display: grid;
+    /* make 7 columns, each 80px wide */
+    grid-template-columns: repeat(7, 80px); 
+    gap: 25px;
+    margin-bottom: 40px;
 }
+
 #tableau{
-    display: flex;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(7, 70px);
+    gap: 25px;
 }
+
 #waste{
     margin: 0 auto;
     width: 80px;
     height: 100px;
     position: relative;
 }
+
 #stock{
     width: 80px;
     height: 100px;
     position: relative;
-    border: black dashed 2px;
-
+    border: black dashed 1px;
+    border-radius: 8px;
 }
+
 .foundation{
     width: 80px;
     height: 100px;
     position: relative;
-    border: black dashed 2px;
+    border: black dashed 1px;
+    border-radius: 8px;
 }
+
 .pile{
     width: 80px;
     height: 450px;
     position: relative;
-    border: black dashed 2px;
+    border: black dashed 1px;
+    border-radius: 8px;
 }
+
 .card{
     width: 80px;
     height: 100px;
@@ -42,48 +58,96 @@
     background-position: center;
     background-size: 55%;
 }
+
 .face-down{
     background-image: url("assets/card-back.png");
     background-size: cover;
 }
+
 .red{
     color: #A50201;
 }
+
 .selected {
   outline: 3px solid gold;
 }
+
 #board{
     position: relative;
+    width: fit-content;
+    margin: 30px auto;
 }
+
 #pause-popup{
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
     top: 0;
-    width: 0;
+    left: 0;
     height: 100%;
     width: 100%;
-    background-color: #1b5e20;
+    background-color: #2F7448;
     color: white;
     z-index: 100;
 }
+
 #pause-popup.hidden {
   display: none;
 }
+
 .corner{
     position: absolute;
     font-size: 17px;
     font-weight: bold;
     line-height: 1;
-    z-index: 1;
 }
+
 .top-left{
     top: 3px;
     left: 4px;
 }
+
 .bottom-right{
     bottom: 3px;
     right: 4px;
     transform: rotate(180deg);
+}
+
+#navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: #2F7448;
+  color: #E2BD81;
+}
+
+#navbar p {
+  margin: 0;
+}
+
+#navbar h1 {
+  font-size: 25px;
+  margin: 0;
+}
+
+#stats {
+  display: flex;
+  gap: 28px;
+}
+
+#buttons {
+  display: flex;
+  gap: 8px;
+}
+
+#top-row .foundation:nth-child(3) {
+  grid-column: 4;
+}
+
+#new-game, #undo-draw, #pause-button {
+    border: solid black 1px;
+    border-radius: 5px;
+    background-color: #DDD8B4;
 }
