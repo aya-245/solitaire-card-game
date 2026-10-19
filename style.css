@@ -5,14 +5,14 @@ body{
 #top-row{
     display: grid;
     /* make 7 columns, each 80px wide */
-    grid-template-columns: repeat(7, 80px); 
+    grid-template-columns: repeat(7, 85px); 
     gap: 25px;
     margin-bottom: 40px;
 }
 
 #tableau{
     display: grid;
-    grid-template-columns: repeat(7, 70px);
+    grid-template-columns: repeat(7, 80px);
     gap: 25px;
 }
 
@@ -83,17 +83,32 @@ body{
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    max-width: 700px;
     background-color: #2F7448;
     color: white;
     z-index: 100;
+    gap: 30px;
+    border: #E2BD81 solid 3px;
+    border-radius: 8px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    padding: 30px;
 }
 
 #pause-popup.hidden {
   display: none;
+}
+
+#pause-popup img{
+    width: 160px;
+}
+
+#pause-popup p{
+    font-size: 20px;
+    line-height: 1.5;
 }
 
 .corner{
@@ -150,4 +165,9 @@ body{
     border: solid black 1px;
     border-radius: 5px;
     background-color: #DDD8B4;
+}
+
+#resume-message{
+    color: #E2BD81;
+    font-weight: bold;
 }
