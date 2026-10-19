@@ -75,6 +75,12 @@ function newGame(){
     selected = null
     score = 0
     canUndoDraw = false
+    stopTimer()
+    seconds = 0
+    paused = false
+    pausePopUpElement.classList.add("hidden")
+    timerElement.textContent = "Time: 00:00"
+    pauseButtonelement.textContent = "Pause"
 
     updateScore(0)
     const deck = shuffle(createDeck())
@@ -178,6 +184,10 @@ function render() {
 }
 
 function drawCard(){
+    if(paused){
+        return
+    }
+
     if(stock.length > 0){
         startTimer()
         const topCard = stock.pop()
@@ -202,6 +212,10 @@ function drawCard(){
 }
 
 function handleClick(event){
+    if(paused){
+        return
+    }
+
    const cardElement = event.target.closest(".card")
    const pileDiv = event.target.closest(".pile")
    const foundationDiv = event.target.closest(".foundation")
@@ -394,6 +408,7 @@ function checkWin(){
 }
 
 function finishGame(){
+    stopTimer()
     if(score > highestScore){
         highestScore = score
         localStorage.setItem("highestScore", highestScore)
@@ -426,6 +441,9 @@ function autoWin(){
 }
 
 function undoDraw(){
+    if(paused){
+        return
+    }
     if(canUndoDraw === false || waste.length === 0){
         return
     }
@@ -456,14 +474,33 @@ function startTimer(){
     timerId = setInterval(tick, 1000)
 }
 function stopTimer(){
-        clearInterval(timerId)
-        timerId = null
+    clearInterval(timerId)
+    timerId = null
+}
+
+function togglePause(){
+    if(timerId === null && !paused){
+        return
+    }
+    if(paused === false){
+        stopTimer()
+        paused = true
+        pausePopUpElement.classList.remove("hidden")
+        pauseButtonelement.textContent = "Resume"
+    }
+    else{
+        paused = false
+        pausePopUpElement.classList.add("hidden")
+        pauseButtonelement.textContent = "Pause"
+        startTimer()
+    }
 }
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
 newGameButtonElement.addEventListener("click", resetGame)
 undoDrawElement.addEventListener("click", undoDraw)
+pauseButtonelement.addEventListener("click", togglePause)
 
 // Start the game
 highestScore = Number(localStorage.getItem("highestScore"))
