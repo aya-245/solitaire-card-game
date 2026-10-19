@@ -38,12 +38,16 @@
     border-radius: 8px;
     background-color: white;
     position: absolute;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 55%;
 }
 .face-down{
-    background-color: blue;
+    background-image: url("assets/card-back.png");
+    background-size: cover;
 }
 .red{
-    color: red;
+    color: #A50201;
 }
 .selected {
   outline: 3px solid gold;
@@ -66,4 +70,20 @@
 }
 #pause-popup.hidden {
   display: none;
+}
+.corner{
+    position: absolute;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1;
+    z-index: 1;
+}
+.top-left{
+    top: 3px;
+    left: 4px;
+}
+.bottom-right{
+    bottom: 3px;
+    right: 4px;
+    transform: rotate(180deg);
 }

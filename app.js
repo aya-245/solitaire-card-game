@@ -112,7 +112,19 @@ function createCardElement(card, pileType, pileIndex, cardIndex){
     const cardElement = document.createElement("div")
     cardElement.classList.add("card")
     if(card.faceUp){
-        cardElement.textContent = getSymbol(card)
+        const topCorner = document.createElement("span")
+        topCorner.classList.add("corner", "top-left")
+        topCorner.textContent = getSymbol(card)
+
+        const bottomCorner = document.createElement("span")
+        bottomCorner.classList.add("corner", "bottom-right")
+        bottomCorner.textContent = getSymbol(card)
+
+        cardElement.appendChild(topCorner)
+        cardElement.appendChild(bottomCorner)
+
+        const rankName = ranks[card.rank - 1]
+        cardElement.style.backgroundImage = `url("assets/${rankName}.png")`
 
         if(getColor(card) === "red"){
             cardElement.classList.add("red")
@@ -138,7 +150,7 @@ function renderTableau(){
         for(let j=0; j < tableau[i].length; j++){
             const card = tableau[i][j]
             const cardElement = createCardElement(card, "tableau", i, j)
-            cardElement.style.top = j * 20 + "px"
+            cardElement.style.top = j * 25 + "px"
             pileElement[i].appendChild(cardElement)
         }
     }
