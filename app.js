@@ -1,5 +1,8 @@
 console.log("JS working")
 // cached constants
+const shuffleSound = new Audio("assets/shuffling.mp3")
+const dropSound = new Audio("assets/drop.mp3")
+
 const gameElement = document.querySelector("#game")
 const newGameButtonElement = document.querySelector("#new-game")
 const messageElement = document.querySelector("#message")
@@ -17,6 +20,10 @@ const darkModeButtonElement = document.querySelector("#dark-mode")
 const leaderboardButtonElement = document.querySelector("#leaderboard")
 const leaderboardPopupElement = document.querySelector("#leaderboard-popup")
 const leaderboardListElement = document.querySelector("#leaderboard-list")
+const winPopupElement = document.querySelector("#win-popup")
+const winScoreElement = document.querySelector("#win-score")
+const winTimeElement = document.querySelector("#win-time")
+const playAgainElement = document.querySelector("#play-again")
 
 console.log(gameElement)
 console.log(newGameButtonElement)
@@ -33,8 +40,10 @@ console.log(timerElement)
 console.log(pausePopUpElement)
 console.log(darkModeButtonElement)
 console.log(leaderboardButtonElement)
-console.log(leaderboardPopupElement)
-console.log(leaderboardListElement)
+console.log(winPopupElement)
+console.log(winScoreElement)
+console.log(winTimeElement)
+console.log(playAgainElement)
 
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
@@ -87,6 +96,7 @@ function newGame(){
     seconds = 0
     paused = false
     pausePopUpElement.classList.add("hidden")
+    winPopupElement.classList.add("hidden")
     timerElement.textContent = "Time: 00:00"
     pauseButtonelement.textContent = "Pause"
 
@@ -220,6 +230,7 @@ function drawCard(){
         canUndoDraw = true
     }
     else if(waste.length > 0){
+        playSound(shuffleSound)
         startTimer()
         canUndoDraw = false
         updateScore(-20)
@@ -351,6 +362,7 @@ function tryMove(destType, destIndex){
     }
 
     if (legal) {
+        playSound(dropSound)
         startTimer()
         canUndoDraw = false
         const chunk = source.splice(selected.cardIndex)
@@ -408,8 +420,8 @@ function tryMove(destType, destIndex){
 }
 
  function resetGame(){
+    playSound(shuffleSound)
     newGame()
-    messageElement.textContent = ""
     render()
 }
 
@@ -439,8 +451,9 @@ function finishGame(){
         localStorage.setItem("highestScore", highestScore)
     }
     updateScore(0)
-    messageElement.textContent = "You won! Score: " + score
-}
+    winScoreElement.textContent = "Score: " + score
+    winTimeElement.textContent = "Time: " + formatTime(seconds)
+    winPopupElement.classList.remove("hidden")}
 
 function canAutoWin(){
     if(stock.length > 0 || waste.length > 0){
@@ -690,6 +703,12 @@ function toggleLeaderboard(){
     }
 }
 
+//sound effects
+function playSound(sound){
+    sound.currentTime = 0 // play it as soon as possible
+    sound.play() // starts the audio
+}
+
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
@@ -704,6 +723,7 @@ gameElement.addEventListener("drop", handleDrop)
 darkModeButtonElement.addEventListener("click",toggleDarkMode)
 
 leaderboardButtonElement.addEventListener("click", toggleLeaderboard)
+playAgainElement.addEventListener("click", resetGame)
 
 // Start the game
 if(localStorage.getItem("theme") === "dark"){

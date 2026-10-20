@@ -230,3 +230,42 @@ body{
     font-size: 20px;
     line-height: 1.5;
 }
+
+#win-popup{
+    display: block;
+    min-width: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #2F7448;
+    color: white;
+    z-index: 100;
+    border: #E2BD81 solid 3px;
+    border-radius: 8px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    text-align: center;
+}
+
+#win-popup.hidden{
+    display: none;
+}
+
+#win-popup h2{
+    color: #E2BD81;
+    font-size: 32px;
+    margin-top: 0;
+}
+
+#win-popup p{
+    font-size: 20px;
+}
+
+#play-again{
+        border: solid black 1px;
+    border-radius: 5px;
+    background-color: #DDD8B4;
+    padding: 6px 14px;
+    font-size: 16px;
+}
