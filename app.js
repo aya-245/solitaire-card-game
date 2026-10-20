@@ -13,6 +13,7 @@ const undoDrawElement = document.querySelector("#undo-draw")
 const pauseButtonelement = document.querySelector("#pause-button")
 const timerElement = document.querySelector("#timer")
 const pausePopUpElement = document.querySelector("#pause-popup")
+const darkModeButtonElement = document.querySelector("#dark-mode")
 
 console.log(gameElement)
 console.log(newGameButtonElement)
@@ -608,6 +609,21 @@ function handleDrop(event){
     }
 }
 
+function toggleDarkMode(){
+    document.body.classList.toggle("dark-mode-toggle")
+    const isDark = document.body.classList.contains("dark-mode-toggle")
+    let theme
+    if(isDark){
+        theme = "dark"
+        darkModeButtonElement.textContent = "Light Mode"
+    }
+    else{
+        theme = "light"
+        darkModeButtonElement.textContent = "Dark Mode"
+    }
+    localStorage.setItem("theme", theme)
+}
+
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
@@ -618,8 +634,13 @@ pauseButtonelement.addEventListener("click", togglePause)
 gameElement.addEventListener("dragstart", handleDragStart)
 gameElement.addEventListener("dragover", handleDragOver)
 gameElement.addEventListener("drop", handleDrop)
+darkModeButtonElement.addEventListener("click",toggleDarkMode)
 
 // Start the game
+if(localStorage.getItem("theme") === "dark"){
+    document.body.classList.add("dark-mode")
+    darkModeButtonElement.textContent = "Light Mode"
+}
 highestScore = Number(localStorage.getItem("highestScore"))
 newGame()
 render()

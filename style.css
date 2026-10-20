@@ -171,3 +171,34 @@ body{
     color: #E2BD81;
     font-weight: bold;
 }
+
+#dark-mode{
+    background-color: #DDD8B4;
+    border: solid black 1px;
+    border-radius: 5px;
+}
+.dark-mode-toggle{
+    background-color: #2F7448;
+}
+
+.dark-mode-toggle .pile,
+.dark-mode-toggle .foundation,
+.dark-mode-toggle #stock{
+    border: dashed 1px #DDD8B4;
+}
+
+.dark-mode-toggle #new-game,
+.dark-mode-toggle #undo-draw,
+.dark-mode-toggle #pause-button,
+.dark-mode-toggle #dark-mode{
+    background-color: #2F7448;
+    color: #EDEDED;
+}
+.dark-mode-toggle #navbar{
+    background-color: #DDD8B4;
+    color: black;
+}
+
+.dark-mode-toggle .face-down{
+    background-image: url("assets/card-back-lightmode.png");
+}
