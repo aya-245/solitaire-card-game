@@ -618,7 +618,6 @@ pauseButtonelement.addEventListener("click", togglePause)
 gameElement.addEventListener("dragstart", handleDragStart)
 gameElement.addEventListener("dragover", handleDragOver)
 gameElement.addEventListener("drop", handleDrop)
-gameElement.addEventListener("dragend", handleDragEnd)
 
 // Start the game
 highestScore = Number(localStorage.getItem("highestScore"))
