@@ -112,6 +112,10 @@ function createCardElement(card, pileType, pileIndex, cardIndex){
     const cardElement = document.createElement("div")
     cardElement.classList.add("card")
     if(card.faceUp){
+        if(pileType !== "stock"){
+            cardElement.draggable = true
+        }
+
         const topCorner = document.createElement("span")
         topCorner.classList.add("corner", "top-left")
         topCorner.textContent = getSymbol(card)
@@ -507,12 +511,114 @@ function togglePause(){
         startTimer()
     }
 }
+
+// animation (drag and drop)
+
+// grabs
+function handleDragStart(event){
+    const cardElement = event.target.closest(".card")
+
+    if(paused === true || cardElement === null || !cardElement.draggable){
+        event.preventDefault()
+        return
+    }
+
+    pileType = cardElement.dataset.pileType
+    pileIndex = Number(cardElement.dataset.pileIndex)
+    cardIndex = Number(cardElement.dataset.cardIndex)
+    selected = {pileType: pileType, pileIndex: pileIndex, cardIndex: cardIndex}
+
+    // when i am grabbing a pile of cards, they should all move together
+    if(pileType === "tableau"){
+        const pileCards = pileElement[pileIndex].querySelectorAll(".card")
+        const ghost = document.createElement("div")
+        ghost.style.position = "absolute"
+        ghost.style.top = "-1000px"
+        ghost.style.left = "-1000px"
+
+        // counts how many cards are being dragged
+        const stackSize = pileCards.length - cardIndex
+        // width of the card plus the border on each side
+        ghost.style.width = "84px"
+        //heigh of how many cards are being dragged times the space betweenn the stacked cards times the height of one card plus the border on eah side
+        ghost.style.height = ((stackSize - 1) * 25 * 104) + "px"
+
+
+        for(let i = pileIndex; i < pileCards.length; i++){
+            const clone = pileCards[i].cloneNode(true)
+            // position each copy inside the host container spaced 25 px apart
+            clone.style.top = (i - cardIndex) * 25 + "px"
+            // put it inside the gjost container
+            ghost.appendChild(clone)
+        }
+        // saves it in a dccument for the browser (snapshot)
+        document.body.appendChild(ghost)
+        // instead of grbbing the default (one card), it grabs the x and y axis, so 40px is the middle of the card and 20 px is near the top
+        // so it appears to be grabbing a stack by the first card 
+        event.dataTransfer.setDragImage(ghost, 40, 20)
+        // deletes the snapshot right away (in 0 millisecond)
+        setTimeout(()=>{ghost.remove(), 0})
+    }
+}
+
+// hovers
+function handleDragOver(event){
+    // to only allow it to drop in on piles and the foundation
+    if(event.target.closest(".pile") || event.target.closest(".foundation")){
+        // this spot accepts drops if false, it will retrun null
+        event.preventDefault()
+    }
+}
+
+// releases
+function handleDrop(event){
+    event.preventDefault()
+
+    // if we havent selected anything to drop then ignore
+    if(selected === null){
+        return
+    }
+    // where the drop landed
+    const pileDiv = event.target.closest(".pile")
+    const foundationDiv = event.target.closest(".foundation")
+    // describe the destination
+    let destType = null
+    let destIndex = null
+
+    if(pileDiv !== null){
+        destType = "tableau"
+        destIndex = Number(pileDiv.dataset.index)
+    }
+    else if(foundationDiv !== null){
+        destType = "foundation"
+        destIndex = Number(foundationDiv.dataset.index)
+    }
+
+    // is the card being dropped from the same spot it came from?
+    const sameSpot = destType === selected.pileType && destIndex === selected.pileIndex
+    
+    // if destination is not null and it's being dropped in a different spot, call function tryMove to check if the move is legal
+    if(destType !== null && !sameSpot){
+        tryMove(destType, destIndex)
+    }
+    else{
+        // return everything to normal
+        selected = null
+        render()
+    }
+}
+
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
 newGameButtonElement.addEventListener("click", resetGame)
 undoDrawElement.addEventListener("click", undoDraw)
 pauseButtonelement.addEventListener("click", togglePause)
+
+gameElement.addEventListener("dragstart", handleDragStart)
+gameElement.addEventListener("dragover", handleDragOver)
+gameElement.addEventListener("drop", handleDrop)
+gameElement.addEventListener("dragend", handleDragEnd)
 
 // Start the game
 highestScore = Number(localStorage.getItem("highestScore"))
