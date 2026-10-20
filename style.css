@@ -161,7 +161,7 @@ body{
   grid-column: 4;
 }
 
-#new-game, #undo-draw, #pause-button {
+#new-game, #undo-draw, #pause-button, #leaderboard {
     border: solid black 1px;
     border-radius: 5px;
     background-color: #DDD8B4;
@@ -190,7 +190,8 @@ body{
 .dark-mode-toggle #new-game,
 .dark-mode-toggle #undo-draw,
 .dark-mode-toggle #pause-button,
-.dark-mode-toggle #dark-mode{
+.dark-mode-toggle #dark-mode,
+.dark-mode-toggle #leaderboard{
     background-color: #2F7448;
     color: #EDEDED;
 }
@@ -201,4 +202,31 @@ body{
 
 .dark-mode-toggle .face-down{
     background-image: url("assets/card-back-lightmode.png");
+}
+
+#leaderboard-popup{
+    display: block;
+    min-width: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #2F7448;
+    color: white;
+    z-index: 100;
+    border: #E2BD81 solid 3px;
+    border-radius: 8px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    text-align: center;
+}
+
+#leaderboard-popup.hidden{
+    display: none;
+}
+
+#leaderboard-list{
+    text-align: left;
+    font-size: 20px;
+    line-height: 1.5;
 }

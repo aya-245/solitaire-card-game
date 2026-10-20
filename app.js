@@ -14,6 +14,9 @@ const pauseButtonelement = document.querySelector("#pause-button")
 const timerElement = document.querySelector("#timer")
 const pausePopUpElement = document.querySelector("#pause-popup")
 const darkModeButtonElement = document.querySelector("#dark-mode")
+const leaderboardButtonElement = document.querySelector("#leaderboard")
+const leaderboardPopupElement = document.querySelector("#leaderboard-popup")
+const leaderboardListElement = document.querySelector("#leaderboard-list")
 
 console.log(gameElement)
 console.log(newGameButtonElement)
@@ -28,6 +31,10 @@ console.log(undoDrawElement)
 console.log(pauseButtonelement)
 console.log(timerElement)
 console.log(pausePopUpElement)
+console.log(darkModeButtonElement)
+console.log(leaderboardButtonElement)
+console.log(leaderboardPopupElement)
+console.log(leaderboardListElement)
 
 // constants
 const suitSymbols = { hearts: "♥", diamonds: "♦", clubs: "♣", spades: "♠" }
@@ -426,6 +433,7 @@ function checkWin(){
 
 function finishGame(){
     stopTimer()
+    addToLeaderboard(score)
     if(score > highestScore){
         highestScore = score
         localStorage.setItem("highestScore", highestScore)
@@ -611,6 +619,7 @@ function handleDrop(event){
 
 function toggleDarkMode(){
     document.body.classList.toggle("dark-mode-toggle")
+    // searches is dark-mode-toggle is there
     const isDark = document.body.classList.contains("dark-mode-toggle")
     let theme
     if(isDark){
@@ -624,6 +633,63 @@ function toggleDarkMode(){
     localStorage.setItem("theme", theme)
 }
 
+// leaderboard
+
+// return the saved scores as an array
+function getLeaderBoard(){
+    const saved = localStorage.getItem("leaderboard")
+    if(saved === null){
+        return []
+    }
+    // since localStorage stores string, we parse it to turn it into an array
+    return JSON.parse(saved)
+}
+
+function addToLeaderboard(newScore){
+    if(typeof newScore !== "number" || isNaN(newScore)){
+        return
+    }
+    const board = getLeaderBoard()
+    board.push(newScore)
+    // sorts in descending order
+    board.sort((a, b)=>{return b - a})
+    const top5 = board.slice(0,5)
+    // the array is saved under leaderboard (the key)
+    localStorage.setItem("leaderboard", JSON.stringify(top5))
+}
+
+function showLeaderboard(){
+    const board = getLeaderBoard()
+    leaderboardListElement.innerHTML = ""
+    for(let i=0; i < 5; i++){
+        const item = document.createElement("li")
+        if(i < board.length){
+            item.textContent = board[i]
+        }
+        else{
+            item.textContent = "---"
+        }
+        // puts the li (unordered list) in the ol (ordered list)
+        leaderboardListElement.appendChild(item)
+    }
+    leaderboardPopupElement.classList.remove("hidden")
+}
+
+function hideLeaderboard(){
+    leaderboardPopupElement.classList.add("hidden")
+}
+
+function toggleLeaderboard(){
+    if(leaderboardPopupElement.classList.contains("hidden")){
+        showLeaderboard()
+        leaderboardButtonElement.textContent = "Close Leader Board"
+    }
+    else{
+        hideLeaderboard()
+        leaderboardButtonElement.textContent = "Leader Board"
+    }
+}
+
 // Event Listeners
 stockElement.addEventListener("click", drawCard)
 gameElement.addEventListener("click", handleClick)
@@ -634,7 +700,10 @@ pauseButtonelement.addEventListener("click", togglePause)
 gameElement.addEventListener("dragstart", handleDragStart)
 gameElement.addEventListener("dragover", handleDragOver)
 gameElement.addEventListener("drop", handleDrop)
+
 darkModeButtonElement.addEventListener("click",toggleDarkMode)
+
+leaderboardButtonElement.addEventListener("click", toggleLeaderboard)
 
 // Start the game
 if(localStorage.getItem("theme") === "dark"){
