@@ -15,6 +15,7 @@ A Marvel-themed take on classic Klondike Solitaire. The goal of the game is to m
 - The user should move a card to the tableau if it's legal
 - The user should reveal the hidden cards
 - The user should see a message if they win 
+- The user should be able to automatically when when all cards are revealed
 - The user should be able to restart the game
 - The user should be able to see a timer
 - The user should be able to pause the game
